@@ -24,3 +24,5 @@ hs_err_pid*
 
 # acho melhor cada um ficar com o próprio txt
 *.txt
+
+.idea/
