@@ -21,36 +21,35 @@ public class Cliente {
             
             Scanner startEvent = new Scanner(System.in);
             System.out.println("Digite qualquer coisa para iniciar o cliente ");
-            int startFlag = startEvent.nextInt();
             boolean toDo = true;
             int cont = 0;
             while(toDo){
                 cont += 1;
                 
-                String arqNum = Integer.toString(gerador.nextInt(3));
-                String arqnome = "arquivo" +arqNum + ".txt";    //
-                System.out.println("Cliente: " + args[0]);
-                //System.out.println("Cliente: 1");
+                // int arqNum = gerador.nextInt(3);
+                int arqNum = 1;
+                String arqnome = "arquivo" + arqNum + ".txt";    //
+                System.out.println("Cliente: " + idClient);
                 int op = gerador.nextInt(2) + 1;
                 Thread.sleep(1000);
                 if(op == 1){
                     System.out.println("Fazendo LEITURA em: "+ arqnome +"\n");
-                    String text = stub.readFile(arqnome);
+                    String text = stub.readFile(arqNum, idClient);
                     System.out.println("Texto lido: " + text);
 
                 }
                 else if (op == 2){
-                        System.out.println("Fazendo ESCRITA em:" + arqnome + "\n");
-                        String conteudo = "Cliente " + args[0] + "escreveu aqui.";
+                        System.out.println("Fazendo ESCRITA em: " + arqnome + "\n");
+                        String conteudo = "Cliente " + idClient + " escreveu aqui.";
                         //String conteudo = "Cliente escreveu aqui na vez " + Integer.toString(cont);
-                        if(stub.writeFile(arqnome, conteudo))
+                        if(stub.writeFile(arqNum, idClient, conteudo))
                             System.out.println("Escrita com sucesso");        
                 }
                 System.out.println("---------\n");
                 if (cont == 10){ 
                     toDo = false;
                     System.out.println("Tudo finalizado! digite qualquer coisa para sair");
-                    startFlag = startEvent.nextInt();
+                    startEvent.nextLine();
                 }
                 
                 

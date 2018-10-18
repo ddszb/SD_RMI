@@ -8,18 +8,31 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 public class Servidor implements ClienteServidor {
-    private final Semaphore disponivel;
+
+    private final Semaphore acessoArquivo1;
+    private final Semaphore escritaArquivo1;
+    private final Semaphore acessoArquivo2;
+    private final Semaphore escritaArquivo2;
+    private final Semaphore acessoArquivo3;
+    private final Semaphore escritaArquivo3;
+
     public Servidor() {
-        this.disponivel = new Semaphore(1, true);
+        this.acessoArquivo1 = new Semaphore(3, true);
+        this.acessoArquivo2 = new Semaphore(3, true);
+        this.acessoArquivo3 = new Semaphore(3, true);
+        this.escritaArquivo1 = new Semaphore(1, true);
+        this.escritaArquivo2 = new Semaphore(1, true);
+        this.escritaArquivo3 = new Semaphore(1, true);
     }
+
     public String digaAloMundo() {
         System.out.println("Chamada de aplicacao Cliente recebida!");
         return "Agora nao tem desculpa. Tu jah sabe RMI. Bora programar! Beleza?";
     }
+
     public static void main(String args[]) {
         System.out.println("------------ Servidor -----------\n\n");
         try {
@@ -33,32 +46,85 @@ public class Servidor implements ClienteServidor {
         }
     }
 
-    public String readFile(String arquivo) throws InterruptedException{
+    public String readFile(int numArquivo, int idClient) throws InterruptedException{
+        String nomeArq = "arquivo" + Integer.toString(numArquivo) + ".txt";
+        String linha;
+        switch (numArquivo) {
+            case 1:
+                while(this.escritaArquivo1.availablePermits() != 1);
+                this.acessoArquivo1.acquire(1);
+                break;
+            case 2:
+                while(this.escritaArquivo2.availablePermits() != 1);
+                this.acessoArquivo2.acquire(1);
+                break;
+            case 3:
+                while(this.escritaArquivo3.availablePermits() != 1);
+                this.acessoArquivo3.acquire(1);
+                break;
+        }
+        Thread.sleep(5000);
         try {
-            this.disponivel.acquire();
-            FileReader arq = new FileReader(arquivo);
+            FileReader arq = new FileReader(nomeArq);
             BufferedReader lerArq = new BufferedReader(arq);
-            String linha = lerArq.readLine(); 
+            linha = lerArq.readLine();
             arq.close();
-            System.out.println("Linha lida com sucesso:" + linha);
-            this.disponivel.release();
-            return new String(linha);
         } catch (IOException e) {
             return "Erro na abertura do arquivo ";
         }
+        switch (numArquivo) {
+            case 1:
+                this.acessoArquivo1.release();
+                break;
+            case 2:
+                this.acessoArquivo2.release();
+                break;
+            case 3:
+                this.acessoArquivo3.release();
+                break;
+        }
+        System.out.println("Linha lida com sucesso: " + linha);
+        return linha;
     }
 
-    public boolean writeFile(String arq, String conteudo) throws InterruptedException {
-    System.out.println("Chamada de escrita de arquivo! Escrevendo: " + conteudo);
-    try {
-        this.disponivel.acquire();
-        BufferedWriter buffWrite = new BufferedWriter(new FileWriter(arq));
-        buffWrite.append(conteudo);
-        buffWrite.close();
-        this.disponivel.release();
-        return true;
-    } catch (IOException e) {
-        return false;
+    public boolean writeFile(int numArq, int idClient, String conteudo) throws InterruptedException {
+        System.out.println("Chamada de escrita de arquivo! Escrevendo: " + conteudo);
+        String nomeArq = "arquivo" + Integer.toString(numArq) + ".txt";
+        switch (numArq) {
+            case 1:
+                this.escritaArquivo1.acquire();
+                this.acessoArquivo1.acquire(3);
+                break;
+            case 2:
+                this.escritaArquivo2.acquire();
+                this.acessoArquivo2.acquire(3);
+                break;
+            case 3:
+                this.escritaArquivo3.acquire();
+                this.acessoArquivo3.acquire(3);
+                break;
         }
+        Thread.sleep(10000);
+        try {
+            BufferedWriter buffWrite = new BufferedWriter(new FileWriter(nomeArq));
+            buffWrite.append(conteudo);
+            buffWrite.close();
+        } catch (IOException e) {
+            return false;
+        }
+        switch (numArq) {
+            case 1:
+                this.acessoArquivo1.release(3);
+                this.escritaArquivo1.release();
+                break;
+            case 2:
+                this.acessoArquivo2.release(3);
+                this.escritaArquivo2.release();
+                break;
+            case 3:
+                this.acessoArquivo3.release(3);
+                this.escritaArquivo3.release();
+        }
+        return true;
     }
 }
