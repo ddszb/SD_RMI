@@ -10,9 +10,9 @@ public class Cliente {
     private Cliente() {}
     public static void main(String[] args) {
         System.out.println("-------------  Cliente  -----------\n\n");
-        //int idClient = Integer.parseInt(args[1]);               // Definição do id do cliente
+        int idClient = Integer.parseInt(args[0]);               // Definição do id do cliente
 
-        String host = (args.length < 1) ? null : args[0];
+        
         try {
             Registry registry = LocateRegistry.getRegistry(0);
             ClienteServidor stub = (ClienteServidor) registry.lookup("ClienteServidor");
@@ -29,8 +29,8 @@ public class Cliente {
                 
                 String arqNum = Integer.toString(gerador.nextInt(3));
                 String arqnome = "arquivo" +arqNum + ".txt";    //
-                //System.out.println("Cliente: " + args[1]);
-                System.out.println("Cliente: 1");
+                System.out.println("Cliente: " + args[0]);
+                //System.out.println("Cliente: 1");
                 int op = gerador.nextInt(2) + 1;
                 Thread.sleep(1000);
                 if(op == 1){
@@ -41,8 +41,8 @@ public class Cliente {
                 }
                 else if (op == 2){
                         System.out.println("Fazendo ESCRITA em:" + arqnome + "\n");
-                        //String conteudo = "Cliente " + args[1] + "escreveu aqui.";
-                        String conteudo = "Cliente escreveu aqui na vez " + Integer.toString(cont);
+                        String conteudo = "Cliente " + args[0] + "escreveu aqui.";
+                        //String conteudo = "Cliente escreveu aqui na vez " + Integer.toString(cont);
                         if(stub.writeFile(arqnome, conteudo))
                             System.out.println("Escrita com sucesso");        
                 }
