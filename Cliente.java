@@ -46,7 +46,7 @@ public class Cliente {
 
             }
 
-        }catch (NotBoundException | RemoteException e) {
+        }catch (NotBoundException | RemoteException | InterruptedException e ) {
             System.err.println("Capturando a exceção no Cliente: " + e.toString());
             }
     }
