@@ -47,6 +47,7 @@ public class Servidor implements ClienteServidor {
     }
 
     public String readFile(int numArquivo, int idClient) throws InterruptedException{
+        System.out.println("Cliente " + idClient + " - Pedido de leitura no arquivo" + numArquivo + "!");
         String nomeArq = "arquivo" + Integer.toString(numArquivo) + ".txt";
         String linha;
         switch (numArquivo) {
@@ -70,6 +71,7 @@ public class Servidor implements ClienteServidor {
             linha = lerArq.readLine();
             arq.close();
         } catch (IOException e) {
+            System.out.println("Cliente " + idClient + " - Leitura no arquivo" + numArquivo + " deu erro: " + e.toString());
             return "Erro na abertura do arquivo ";
         }
         switch (numArquivo) {
@@ -83,12 +85,12 @@ public class Servidor implements ClienteServidor {
                 this.acessoArquivo3.release();
                 break;
         }
-        System.out.println("Linha lida com sucesso: " + linha);
+        System.out.println("Cliente " + idClient + " - Leitura no arquivo" + numArquivo + " realizada! Lido: " + linha);
         return linha;
     }
 
     public boolean writeFile(int numArq, int idClient, String conteudo) throws InterruptedException {
-        System.out.println("Chamada de escrita de arquivo! Escrevendo: " + conteudo);
+        System.out.println("Cliente " + idClient + " - Pedido de escrita no arquivo" + numArq + ": " + conteudo);
         String nomeArq = "arquivo" + Integer.toString(numArq) + ".txt";
         switch (numArq) {
             case 1:
@@ -110,6 +112,7 @@ public class Servidor implements ClienteServidor {
             buffWrite.append(conteudo);
             buffWrite.close();
         } catch (IOException e) {
+            System.out.println("Cliente " + idClient + " - Escrita no arquivo" + numArq + " deu erro: " + e.toString());
             return false;
         }
         switch (numArq) {
@@ -125,6 +128,7 @@ public class Servidor implements ClienteServidor {
                 this.acessoArquivo3.release(3);
                 this.escritaArquivo3.release();
         }
+        System.out.println("Cliente " + idClient + " - Escrita no arquivo" + numArq + " realizada com sucesso!");
         return true;
     }
 }

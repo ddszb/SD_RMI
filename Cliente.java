@@ -9,18 +9,18 @@ import java.util.Random;
 public class Cliente {
     private Cliente() {}
     public static void main(String[] args) {
-        System.out.println("-------------  Cliente  -----------\n\n");
         int idClient = Integer.parseInt(args[0]);               // Definição do id do cliente
+        System.out.println("-------------  Cliente " + idClient + "  -----------\n\n");
+        Scanner startEvent = new Scanner(System.in);
 
         
         try {
             Registry registry = LocateRegistry.getRegistry(0);
             ClienteServidor stub = (ClienteServidor) registry.lookup("ClienteServidor");
             
-            Random gerador = new Random(666);                   // Gerador de inteiros para as ações aleatórias           
+            Random gerador = new Random(args.length < 2 ? 666 : Integer.parseInt(args[1]));                   // Gerador de inteiros para as ações aleatórias           
             
-            Scanner startEvent = new Scanner(System.in);
-            System.out.println("Digite qualquer coisa para iniciar o cliente ");
+            //System.out.println("Digite qualquer coisa para iniciar o cliente ");
             boolean toDo = true;
             int cont = 0;
             while(toDo){
@@ -29,7 +29,7 @@ public class Cliente {
                 // int arqNum = gerador.nextInt(3);
                 int arqNum = 1;
                 String arqnome = "arquivo" + arqNum + ".txt";    //
-                System.out.println("Cliente: " + idClient);
+                //System.out.println("Cliente: " + idClient);
                 int op = gerador.nextInt(2) + 1;
                 Thread.sleep(1000);
                 if(op == 1){
@@ -56,6 +56,7 @@ public class Cliente {
             }
         }catch (NotBoundException | RemoteException | InterruptedException e ) {
             System.err.println("Capturando a exceção no Cliente: " + e.toString());
-            }
+            startEvent.nextLine();
+        }
     }
 }
