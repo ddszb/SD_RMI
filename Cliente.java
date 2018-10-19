@@ -12,7 +12,6 @@ public class Cliente {
         int idClient = Integer.parseInt(args[0]);               // Definição do id do cliente
         System.out.println("-------------  Cliente " + idClient + "  -----------\n\n");
         Scanner startEvent = new Scanner(System.in);
-
         
         try {
             Registry registry = LocateRegistry.getRegistry(0);
@@ -58,5 +57,6 @@ public class Cliente {
             System.err.println("Capturando a exceção no Cliente: " + e.toString());
             startEvent.nextLine();
         }
+    startEvent.close();
     }
 }

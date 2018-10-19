@@ -47,20 +47,36 @@ public class Servidor implements ClienteServidor {
     }
 
     public String readFile(int numArquivo, int idClient) throws InterruptedException{
-        System.out.println("Cliente " + idClient + " - Pedido de leitura no arquivo" + numArquivo + "!");
+        System.out.println("Cliente " + idClient + " - Pedido de leitura no arquivo " + numArquivo + "!");
         String nomeArq = "arquivo" + Integer.toString(numArquivo) + ".txt";
         String linha;
+        int iteracoesBloqueado;
         switch (numArquivo) {
             case 1:
-                while(this.escritaArquivo1.availablePermits() != 1);
+                iteracoesBloqueado = 0;
+                while(this.escritaArquivo1.availablePermits() != 1){
+                    ++iteracoesBloqueado;
+                    if(iteracoesBloqueado == 1)
+                        System.out.println("Cliente " + idClient + " foi bloqueado para leitura");
+                }
                 this.acessoArquivo1.acquire(1);
                 break;
             case 2:
-                while(this.escritaArquivo2.availablePermits() != 1);
+                iteracoesBloqueado = 0;
+                while(this.escritaArquivo2.availablePermits() != 1){
+                    ++iteracoesBloqueado;
+                    if(iteracoesBloqueado == 1)
+                        System.out.println("Cliente " + idClient + " foi bloqueado para leitura");
+                }
                 this.acessoArquivo2.acquire(1);
                 break;
             case 3:
-                while(this.escritaArquivo3.availablePermits() != 1);
+                iteracoesBloqueado = 0;
+                while(this.escritaArquivo3.availablePermits() != 1){
+                    ++iteracoesBloqueado;
+                    if(iteracoesBloqueado == 1)
+                        System.out.println("Cliente " + idClient + " foi bloqueado para leitura");
+                }
                 this.acessoArquivo3.acquire(1);
                 break;
         }
@@ -95,14 +111,20 @@ public class Servidor implements ClienteServidor {
         switch (numArq) {
             case 1:
                 this.escritaArquivo1.acquire();
+                if (this.acessoArquivo1.availablePermits() != 3)
+                    System.out.println("Cliente " + idClient + " foi bloqueado para escrita");
                 this.acessoArquivo1.acquire(3);
                 break;
             case 2:
                 this.escritaArquivo2.acquire();
+                if (this.acessoArquivo2.availablePermits() != 3)
+                    System.out.println("Cliente " + idClient + " foi bloqueado para escrita");
                 this.acessoArquivo2.acquire(3);
                 break;
             case 3:
                 this.escritaArquivo3.acquire();
+                if (this.acessoArquivo3.availablePermits() != 3)
+                    System.out.println("Cliente " + idClient + " foi bloqueado para escrita");
                 this.acessoArquivo3.acquire(3);
                 break;
         }
