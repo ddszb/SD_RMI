@@ -20,12 +20,12 @@ public class Servidor2 implements ClienteServidor {
     private final Semaphore escritaArquivo3;
 
     public Servidor2() {
-        this.acessoArquivo1 = new Semaphore(3, true);
-        this.acessoArquivo2 = new Semaphore(3, true);
-        this.acessoArquivo3 = new Semaphore(3, true);
-        this.escritaArquivo1 = new Semaphore(1, true);
-        this.escritaArquivo2 = new Semaphore(1, true);
-        this.escritaArquivo3 = new Semaphore(1, true);
+        this.acessoArquivo1 = new Semaphore(3, false);
+        this.acessoArquivo2 = new Semaphore(3, false);
+        this.acessoArquivo3 = new Semaphore(3, false);
+        this.escritaArquivo1 = new Semaphore(1, false);
+        this.escritaArquivo2 = new Semaphore(1, false);
+        this.escritaArquivo3 = new Semaphore(1, false);
     }
 
     public String digaAloMundo() {
