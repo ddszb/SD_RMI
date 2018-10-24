@@ -46,6 +46,7 @@ public class ServidorCP implements ClienteServidor {
         System.out.println("Cliente " + idClient + " - [?] Pedido de leitura no arquivo " + numArq);
         String nomeArq = "arquivo" + Integer.toString(numArq) + ".txt";
         String linha;
+        Thread.sleep(5000);
         switch (numArq) {
             case 1:
                 if(this.escritaArquivo1.availablePermits() != 1){
@@ -66,7 +67,6 @@ public class ServidorCP implements ClienteServidor {
                 this.acessoArquivo3.acquire(1);
                 break;
         }
-        Thread.sleep(5000);
         try {
             FileReader arq = new FileReader(nomeArq);
             BufferedReader lerArq = new BufferedReader(arq);
