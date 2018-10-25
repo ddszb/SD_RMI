@@ -36,7 +36,6 @@ public class Cliente {
                 int arqNum = 1;
                 String arqnome = "arquivo" + arqNum + ".txt";    //
                 //System.out.println("Cliente: " + idClient);
-                Thread.sleep(1000);
                 if(op == 1){
                     System.out.println("Fazendo LEITURA em: "+ arqnome +"\n");
                     String text = stub.readFile(arqNum, idClient);
@@ -47,7 +46,6 @@ public class Cliente {
                         System.out.println("Fazendo ESCRITA em: " + arqnome + "\n");
                         String conteudo = "Cliente " + idClient + " escreveu aqui.";
                         //String conteudo = "Cliente escreveu aqui na vez " + Integer.toString(cont);
-                        Thread.sleep(1000);
                         if(stub.writeFile(arqNum, idClient, conteudo))
                             System.out.println("Escrita com sucesso");        
                 }
