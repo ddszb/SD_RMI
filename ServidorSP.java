@@ -13,19 +13,13 @@ import java.util.concurrent.Semaphore;
 public class ServidorSP implements ClienteServidor {
 
     private final Semaphore acessoArquivo1;
-    private final Semaphore escritaArquivo1;
     private final Semaphore acessoArquivo2;
-    private final Semaphore escritaArquivo2;
     private final Semaphore acessoArquivo3;
-    private final Semaphore escritaArquivo3;
 
     public ServidorSP() {
         this.acessoArquivo1 = new Semaphore(3, true);
         this.acessoArquivo2 = new Semaphore(3, true);
         this.acessoArquivo3 = new Semaphore(3, true);
-        this.escritaArquivo1 = new Semaphore(1, true);
-        this.escritaArquivo2 = new Semaphore(1, true);
-        this.escritaArquivo3 = new Semaphore(1, true);
     }
 
 
@@ -48,21 +42,12 @@ public class ServidorSP implements ClienteServidor {
         String linha;
         switch (numArq) {
             case 1:
-                if(this.escritaArquivo1.availablePermits() != 1){        // Enquanto houver alguém escrevendo em arquivo 1
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para leitura");
-                }
                 this.acessoArquivo1.acquire(1);
                 break;
             case 2:
-                if(this.escritaArquivo2.availablePermits() != 1){ // Enquanto houver alguém escrevendo em arquivo 2 
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para leitura");
-                }
                 this.acessoArquivo2.acquire(1);
                 break;
             case 3:
-                if(this.escritaArquivo3.availablePermits() != 1){ // Enquanto houver alguém escrevendo em arquivo 3 
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para leitura");
-                }
                 this.acessoArquivo3.acquire(1);
                 break;
         }
@@ -96,22 +81,16 @@ public class ServidorSP implements ClienteServidor {
         String nomeArq = "arquivo" + Integer.toString(numArq) + ".txt";
         switch (numArq) {
             case 1:
-                if (this.acessoArquivo1.availablePermits() != 3 || this.escritaArquivo1.availablePermits() != 1)
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para escrita");
-                this.escritaArquivo1.acquire();
                 this.acessoArquivo1.acquire(3);
+                System.out.println("Cliente " + idClient + " iniciou a escrita na arquivo " + numArq);
                 break;
             case 2:
-                if (this.acessoArquivo2.availablePermits() != 3 || this.escritaArquivo2.availablePermits() != 1)
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para escrita");
-                this.escritaArquivo2.acquire();
                 this.acessoArquivo2.acquire(3);
+                System.out.println("Cliente " + idClient + " iniciou a escrita na arquivo " + numArq);
                 break;
             case 3:
-                if (this.acessoArquivo3.availablePermits() != 3 || this.escritaArquivo3.availablePermits() != 1)
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para escrita");
-                this.escritaArquivo3.acquire();
                 this.acessoArquivo3.acquire(3);
+                System.out.println("Cliente " + idClient + " iniciou a escrita na arquivo " + numArq);
                 break;
         }
         Thread.sleep(10000);
@@ -126,15 +105,12 @@ public class ServidorSP implements ClienteServidor {
         switch (numArq) {
             case 1:
                 this.acessoArquivo1.release(3);
-                this.escritaArquivo1.release();
                 break;
             case 2:
                 this.acessoArquivo2.release(3);
-                this.escritaArquivo2.release();
                 break;
             case 3:
                 this.acessoArquivo3.release(3);
-                this.escritaArquivo3.release();
         }
         System.out.println("Cliente " + idClient + " - [!] Escrita no arquivo" + numArq + " bem sucedida:''"+ conteudo + "''");
         return true;

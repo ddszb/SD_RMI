@@ -131,15 +131,15 @@ public class ServidorCP implements ClienteServidor {
         switch (numArq) {
             case 1:
                 this.escritaArquivo1.acquire();
-                System.out.println("Cliente " + idClient + " iniciou a escrita");
+                System.out.println("Cliente " + idClient + " iniciou a escrita no arquivo " + numArq);
                 break;
             case 2:
                 this.escritaArquivo2.acquire();
-                System.out.println("Cliente " + idClient + " iniciou a escrita");
+                System.out.println("Cliente " + idClient + " iniciou a escrita no arquivo " + numArq);
                 break;
             case 3:
                 this.escritaArquivo3.acquire();
-                System.out.println("Cliente " + idClient + " iniciou a escrita");
+                System.out.println("Cliente " + idClient + " iniciou a escrita no arquivo " + numArq);
                 break;
         }
         try {
