@@ -70,17 +70,20 @@ public class ServidorCP implements ClienteServidor {
                 this.countArquivo1.release();
                 break;
             case 2:
-                if(this.escritaArquivo2.availablePermits() != 1){
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para leitura");
-                }
                 this.acessoArquivo2.acquire(1);
+                this.countArquivo2.acquire();
+                this.readCount2++;
+                if (this.readCount2 == 1)
+                    this.escritaArquivo2.acquire();
+                this.countArquivo2.release();
                 break;
             case 3:
-                if(this.escritaArquivo3.availablePermits() != 1){
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para leitura");
-                }
                 this.acessoArquivo3.acquire(1);
-                break;
+                this.countArquivo3.acquire();
+                this.readCount3++;
+                if (this.readCount3 == 1)
+                    this.escritaArquivo3.acquire();
+                this.countArquivo3.release();
         }
         try {
             FileReader arq = new FileReader(nomeArq);
@@ -102,9 +105,19 @@ public class ServidorCP implements ClienteServidor {
                 this.acessoArquivo1.release();
                 break;
             case 2:
+                this.countArquivo2.acquire();
+                this.readCount2--;
+                if (readCount2 == 0)
+                    this.escritaArquivo2.release();
+                this.countArquivo2.release();
                 this.acessoArquivo2.release();
                 break;
             case 3:
+                this.countArquivo3.acquire();
+                this.readCount3--;
+                if (readCount3 == 0)
+                    this.escritaArquivo3.release();
+                this.countArquivo3.release();
                 this.acessoArquivo3.release();
                 break;
         }
@@ -118,19 +131,15 @@ public class ServidorCP implements ClienteServidor {
         switch (numArq) {
             case 1:
                 this.escritaArquivo1.acquire();
-                System.out.println("Cliente " + idClient + "iniciou a escrita");
+                System.out.println("Cliente " + idClient + " iniciou a escrita");
                 break;
             case 2:
-                if (this.acessoArquivo2.availablePermits() != 3 || this.escritaArquivo2.availablePermits() != 1)
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para escrita");
-                this.acessoArquivo2.acquire(3);
                 this.escritaArquivo2.acquire();
+                System.out.println("Cliente " + idClient + " iniciou a escrita");
                 break;
             case 3:
-                if (this.acessoArquivo3.availablePermits() != 3 || this.escritaArquivo3.availablePermits() != 1)
-                    System.out.println("Cliente " + idClient + " - [X] foi bloqueado para escrita");
-                this.acessoArquivo3.acquire(3);
                 this.escritaArquivo3.acquire();
+                System.out.println("Cliente " + idClient + " iniciou a escrita");
                 break;
         }
         try {
@@ -148,11 +157,10 @@ public class ServidorCP implements ClienteServidor {
                 break;
             case 2:
                 this.escritaArquivo2.release();
-                this.acessoArquivo2.release(3);
                 break;
             case 3:
                 this.escritaArquivo3.release();
-                this.acessoArquivo3.release(3);
+                break;
         }
         System.out.println("Cliente " + idClient + " - [!] Escrita no arquivo" + numArq + " bem sucedida:''"+ conteudo + "''");
         return true;

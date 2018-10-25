@@ -21,7 +21,7 @@ public class Cliente {
             Registry registry = LocateRegistry.getRegistry(0);
             ClienteServidor stub = (ClienteServidor) registry.lookup("ClienteServidor");
             
-            // Random gerador = new Random(args.length < 2 ? 666 : Integer.parseInt(args[1]));                   // Gerador de inteiros para as ações aleatórias
+            Random gerador = new Random(666);                   // Gerador de inteiros para as ações aleatórias
             
             int[] acoes = gerarAcoes(args[1]);
 
@@ -32,8 +32,8 @@ public class Cliente {
                 int op = acoes[cont];
                 cont += 1;
                 
-                // int arqNum = gerador.nextInt(3);
-                int arqNum = 1;
+                int arqNum = gerador.nextInt(3);
+                // int arqNum = 1;
                 String arqnome = "arquivo" + arqNum + ".txt";    //
                 //System.out.println("Cliente: " + idClient);
                 if(op == 1){
