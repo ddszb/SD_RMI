@@ -18,7 +18,7 @@ public class Cliente {
         Scanner startEvent = new Scanner(System.in);
         
         try {
-            Registry registry = LocateRegistry.getRegistry(0);
+            Registry registry = LocateRegistry.getRegistry(args[2]);
             ClienteServidor stub = (ClienteServidor) registry.lookup("ClienteServidor");
             
             Random gerador = new Random(666);                   // Gerador de inteiros para as ações aleatórias
