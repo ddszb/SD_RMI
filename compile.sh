@@ -1,6 +1,6 @@
 #!/bin/bash
-JavaC ClienteServidor.java
-JavaC Cliente.java
-JavaC ServidorCP.java
-JavaC ServidorSP.java
-Rmic Servidor
+javac ClienteServidor.java
+javac Cliente.java
+javac ServidorCP.java
+javac ServidorSP.java
+rmic Servidor
