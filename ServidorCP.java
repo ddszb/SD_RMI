@@ -48,7 +48,7 @@ public class ServidorCP implements ClienteServidor {
         try {
             ServidorCP obj = new ServidorCP();
             ClienteServidor stub = (ClienteServidor) UnicastRemoteObject.exportObject(obj, 0);
-            Registry registry = LocateRegistry.getRegistry(args[0]);
+            Registry registry = LocateRegistry.getRegistry();
             registry.bind("ClienteServidor", stub);
             System.out.println("Servidor CP pronto!");
         } catch (AlreadyBoundException | RemoteException e) {
