@@ -28,7 +28,7 @@ public class ServidorSP implements ClienteServidor {
         try {
             ServidorSP obj = new ServidorSP();
             ClienteServidor stub = (ClienteServidor) UnicastRemoteObject.exportObject(obj, 0);
-            Registry registry = LocateRegistry.getRegistry();
+            Registry registry = LocateRegistry.getRegistry(args[0]);
             registry.bind("ClienteServidor", stub);
             System.out.println("Servidor SP pronto!");
         } catch (AlreadyBoundException | RemoteException e) {
